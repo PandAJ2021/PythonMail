@@ -34,11 +34,11 @@ class PostgreSQLDatabase:
 
 class DatabaseHandler:
 
-    def __init__(self , table_name:str , database = PostgreSQLDatabase):
+    def __init__(self, table_name: str, database=PostgreSQLDatabase):
         self.table_name = table_name
         self.database = database
 
-    def create_table(self , data: dict):
+    def create_table(self, data: dict):
         query = f'CREATE TABLE IF NOT EXISTS {self.table_name} ('
         query += ','.join([f'{col} {data[col]}' for col in data])
         query += ');'
@@ -48,8 +48,8 @@ class DatabaseHandler:
         self.database.close()
 
     def insert(self, data: dict):
-        columns = ','.join(data.keys()) 
-        values = ','.join(data.values()) 
+        columns = ','.join(data.keys())
+        values = ','.join(data.values())
         query = f"INSERT INTO {self.table_name}" + \
             f"({columns})" + f'\n VALUES({values});'
 
@@ -66,7 +66,7 @@ class DatabaseHandler:
         self.database.connect()
         return self.database.execute(query)
 
-    def update(self , data: dict,condition: str):
+    def update(self, data: dict, condition: str):
 
         query = f'UPDATE {self.table_name} SET '
         query += ', '.join([f"{col}={data[col]}" for col in data])
@@ -76,29 +76,9 @@ class DatabaseHandler:
         self.database.execute(query)
         self.database.close()
 
-    def delete(condition: str):
+    def delete(self, condition: str):
         query = f'DELETE FROM {self.table_name} WHERE {condition}'
 
         self.database.connect()
         self.database.execute(query)
         self.database.close()
-
-
-connect_1 = PostgreSQLDatabase('postgres', 'postgres', '1234')
-data = {
-    'id' : 'bigserial',
-    'name': 'varchar(80)',
-    'age': 'int'
-}
-users_db = DatabaseHandler('users' , connect_1)
-# users_db.create_table(data)
-
-insert_data = {
-    'name' : "'Ali'" ,
-    'age' : '22'
-}
-
-# users_db.insert(insert_data)
-users_db.update({'name':"'mehdi'"}, 'id = 1')
-
-print(users_db.read())
