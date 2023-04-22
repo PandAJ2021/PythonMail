@@ -25,9 +25,9 @@ class PostgreSQLDatabase:
             self.conn.close()
             self.conn = None
 
-    def execute(self, query, *params):
+    def execute(self, query):
         with self.conn.cursor() as cur:
-            cur.execute(query, params)
+            cur.execute(query)
             if cur.description is not None:  # handle a cursor that has not executed a SELECT statement
                 return cur.fetchall()
 
@@ -69,8 +69,7 @@ class DatabaseHandler:
     def update(self , data: dict,condition: str):
 
         query = f'UPDATE {self.table_name} SET '
-        query += ', '.join([f"{col}=%s" for col in data])
-        query += ') '
+        query += ', '.join([f"{col}={data[col]}" for col in data])
         query += f' WHERE {condition} ;'
 
         self.database.connect()
@@ -85,16 +84,21 @@ class DatabaseHandler:
         self.database.close()
 
 
-# test = PostgreSQLDatabase('postgres', 'postgres', '1234')
-# data = {
-#     'id' : 'bigserial',
-#     'name': 'varchar(80)',
-#     'age': 'int'
-# }
-# DatabaseHandler('test2' ,test ).create_table(data)
-# # print(DatabaseHandler.read('test' ,database=test))
-# # insert_data = {
+connect_1 = PostgreSQLDatabase('postgres', 'postgres', '1234')
+data = {
+    'id' : 'bigserial',
+    'name': 'varchar(80)',
+    'age': 'int'
+}
+users_db = DatabaseHandler('users' , connect_1)
+# users_db.create_table(data)
 
+insert_data = {
+    'name' : "'Ali'" ,
+    'age' : '22'
+}
 
-# # }
-# # DatabaseHandler.insert('test', data)
+# users_db.insert(insert_data)
+users_db.update({'name':"'mehdi'"}, 'id = 1')
+
+print(users_db.read())
