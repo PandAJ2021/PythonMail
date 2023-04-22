@@ -34,67 +34,68 @@ class PostgreSQLDatabase:
 
 class DatabaseHandler:
 
-    @staticmethod
-    def create_table(table_name: str, data: dict, database=PostgreSQLDatabase):
-        query = f'CREATE TABLE IF NOT EXISTS {table_name} ('
+    def __init__(self , table_name:str , database = PostgreSQLDatabase):
+        self.table_name = table_name
+        self.database = database
+
+    def create_table(self , data: dict):
+        query = f'CREATE TABLE IF NOT EXISTS {self.table_name} ('
         query += ','.join([f'{col} {data[col]}' for col in data])
         query += ');'
 
-        database.connect()
-        database.execute(query)
-        database.close()
+        self.database.connect()
+        self.database.execute(query)
+        self.database.close()
 
-    @staticmethod
-    def insert(table_name: str, data: dict, ddatabase=PostgreSQLDatabase):
+    def insert(self, data: dict):
         columns = ','.join(data.keys()) 
         values = ','.join(data.values()) 
-        query = f"INSERT INTO {table_name}" + \
+        query = f"INSERT INTO {self.table_name}" + \
             f"({columns})" + f'\n VALUES({values});'
 
-        database.connect()
-        database.execute(query)
-        database.close()
+        self.database.connect()
+        self.database.execute(query)
+        self.database.close()
 
-    @staticmethod
-    def read(table_name: str, condition=None, database=PostgreSQLDatabase):
-        query = f"SELECT * FROM {table_name}"
+    def read(self, condition=None):
+        query = f"SELECT * FROM {self.table_name}"
         if condition:
             query += f' WHERE {condition}'
         query += ';'
 
-        database.connect()
-        return database.execute(query)
+        self.database.connect()
+        return self.database.execute(query)
 
     @staticmethod
-    def update(data: dict, table_name: str, condition: str, database=PostgreSQLDatabase):
+    def update(self , data: dict,condition: str):
 
-        query = f'UPDATE {table_name} SET '
+        query = f'UPDATE {self.table_name} SET '
         query += ', '.join([f"{col}=%s" for col in data])
         query += ') '
         query += f' WHERE {condition} ;'
 
-        database.connect()
-        database.execute(query)
-        database.close()
+        self.database.connect()
+        self.database.execute(query)
+        self.database.close()
 
-    @staticmethod
-    def delete(condition: str, database=PostgreSQLDatabase):
-        query = f'DELETE FROM {table_name} WHERE {condition}'
+    def delete(condition: str):
+        query = f'DELETE FROM {self.table_name} WHERE {condition}'
 
-        database.connect()
-        database.execute(query)
-        database.close()
-
-
-test = PostgreSQLDatabase('postgres', 'postgres', '1234')
-data = {
-    'name': 'varchar(80)',
-    'age': 'int'
-}
-DatabaseHandler.create_table('test' , data , test)
-# print(DatabaseHandler.read('test' ,database=test))
-insert_data = {
+        self.database.connect()
+        self.database.execute(query)
+        self.database.close()
 
 
-}
-DatabaseHandler.insert('test', data)
+# test = PostgreSQLDatabase('postgres', 'postgres', '1234')
+# data = {
+#     'id' : 'bigserial',
+#     'name': 'varchar(80)',
+#     'age': 'int'
+# }
+# DatabaseHandler('test2' ,test ).create_table(data)
+# # print(DatabaseHandler.read('test' ,database=test))
+# # insert_data = {
+
+
+# # }
+# # DatabaseHandler.insert('test', data)
