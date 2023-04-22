@@ -66,7 +66,6 @@ class DatabaseHandler:
         self.database.connect()
         return self.database.execute(query)
 
-    @staticmethod
     def update(self , data: dict,condition: str):
 
         query = f'UPDATE {self.table_name} SET '
