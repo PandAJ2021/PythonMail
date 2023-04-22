@@ -14,3 +14,7 @@ class InvalidUsername(AuthException):
         super().__init__("Invalid username format: usernames must contain at least one"+
             " uppercase letter, one\n digit, and one of the characters '_', '-', or '.' ")
 
+class InvalidPassword(AuthException):
+    def __init__(self):
+        super().__init__("Invalid password format: passwords must contain only letters"+
+            " and numbers, with\n a minimum length of 8 characters.") 
