@@ -25,8 +25,8 @@ class DatabaseHandler:
         self.database.execute(query)
         self.database.close()
 
-    def read(self, condition=None):
-        query = f"SELECT * FROM {self.table_name}"
+    def read(self, columns ="*" ,  condition=None):
+        query = f"SELECT {columns} FROM {self.table_name}"
         if condition:
             query += f' WHERE {condition}'
         query += ';'
