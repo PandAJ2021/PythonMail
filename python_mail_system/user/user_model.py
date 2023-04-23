@@ -8,12 +8,13 @@ class User:
 
     def __init__(self, full_name: str, username: str, password: str):
 
+        self.log_state = False
         self.full_name = full_name
         self.username = username
         self.salt = secrets.token_hex(15)
         self.password = password
     
-    def return_dict(self):
+    def dict_attribute(self):
 
         return { 
             "name": f"'{self.full_name}'",
@@ -31,7 +32,7 @@ class User:
         # pattern: start by bounch of letters and pass with 1-3 group of space+letters
         if not re.match(r'^[a-zA-Z]+( [a-zA-Z]+){1,5}$', name):
             raise InvalidNameFormat()
-        self._full_name = name
+        self._full_name = name.upper()
 
     @property
     def username(self):
@@ -53,8 +54,8 @@ class User:
         if not re.match(r'^(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$', value):
             raise InvalidPassword()
         passwd = value + self.salt
-        hashed = hashlib.md5(passwd.encode())
+        hashed = hashlib.md5(passwd.encode()).hexdigest()
         self._password = hashed
 
 
-test= User('Ali Jalili', 'Li23582_d', '12345aaL')
+
