@@ -5,19 +5,13 @@ from exceptions import *
 
 
 class User:
-    users = ["test"]
 
     def __init__(self, full_name: str, username: str, password: str):
-        self.logging = False
+
         self.full_name = full_name
         self.username = username
-        self.password = password
         self.salt = secrets.token_hex(15)
-        __class__.users.append(self)
-    
-
-    def __str__(self):
-        return f'user {self.username} logging status is {self.logging}'
+        self.password = password
 
     @property
     def full_name(self):
@@ -56,3 +50,6 @@ class User:
 
 class UserManager(User):
     pass
+
+test= User('Ali Jalili', 'Li23582_d', '12345aaL')
+print(test.__dict__)
