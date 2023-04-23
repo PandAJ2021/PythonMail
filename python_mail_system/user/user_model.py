@@ -6,9 +6,8 @@ from exceptions import *
 
 class User:
 
-    def __init__(self, full_name: str, username: str, password: str):
-
-        self.log_state = False
+    def __init__(self, full_name: str, username: str, password: str , user_id=None):
+        self.id = user_id
         self.full_name = full_name
         self.username = username
         self.salt = secrets.token_hex(15)
