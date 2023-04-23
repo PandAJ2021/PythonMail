@@ -4,9 +4,9 @@ class AuthException(Exception):
 
 class InvalidNameFormat(AuthException):
     def __init__(self):
-        super().__init__('Invalid format: your name does not match the required format.' +
+        super().__init__('Invalid name format: your name does not match the required format. ' +
                          'Please enter a valid \nname with two or more sections,' +
-                         'each separated by a single space and containing only letters.')
+                         'each separated by a single space and containing only letters!')
 
 
 class InvalidUsername(AuthException):
@@ -18,8 +18,12 @@ class InvalidUsername(AuthException):
 class InvalidPassword(AuthException):
     def __init__(self):
         super().__init__('Password must be at least 8 characters long and contain at least one'+ 
-                    ' uppercase letter and one\n digit.')
+                    ' uppercase letter and one digit!')
 
-class UserAlreadyExist(AuthException):
+class UserNameAlreadyExist(AuthException):
     def __init__(self):
-        super().__init__('User already exist!')
+        super().__init__('Username already exist!')
+
+class AuthenticationError(AuthException):
+    def __init__(self):
+        super().__init__('Username or Password is not correct!')
