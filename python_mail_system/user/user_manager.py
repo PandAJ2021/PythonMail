@@ -2,6 +2,7 @@ from user.user_model import User
 from datastore.database_manager import DatabaseHandler
 from utils.database_connector import PostgreSQLDatabase
 from exceptions import *
+import hashlib
 
 
 user_db_connector = PostgreSQLDatabase(
@@ -9,27 +10,41 @@ user_db_connector = PostgreSQLDatabase(
 
 users_db = DatabaseHandler('users', user_db_connector)
 
-users_db.create_table({
-    'id': 'bigserial primary key Not Null',
-    'name': 'varchar(50)',
-    'username':'varchar(50)',
-    'salt': 'text Not Null',
-    'password': 'text Not null'
-})
+# users_db.create_table({
+#     'id': 'bigserial primary key Not Null',
+#     'name': 'varchar(50)',
+#     'username': 'varchar(50)',
+#     'salt': 'text Not Null',
+#     'password': 'text Not null'
+# })
+
+# hashed_entered_password = hashlib.sha256(entered_password.encode())
 
 
 class UserManager:
 
     @staticmethod
+    def auth_username(username):
+        # stored users is a list of one member tuples.
+        stored_users = users_db.read('username', f"username = '{username}'")
+        return username in [t[0] for t in stored_users]
+        
+
+    @staticmethod
+    def auth_pass(username, password):
+        salt, stored_pass = users_db.read(
+            columns='salt, password', condition=f"username = '{username}'")[0]
+        entered_pass = password + salt
+        hashed_entered = hashlib.md5(entered_pass.encode()).hexdigest()
+        return hashed_entered == stored_pass
+
+
+    @staticmethod
     def register_user(full_name: str, username: str, password: str):
         try:
             user = User(full_name, username, password)
-            if not users_db.read(f"username = '{username}' and name = '{full_name.lower()}'"):
-                users_db.insert(user.return_dict())
-            else:
-                raise UserAlreadyExist()
-                
-        except (InvalidNameFormat , InvalidPassword , InvalidUsername) as err:
+            if UserManager.auth_username(username):
+                raise UserNameAlreadyExist
+            users_db.insert(user.dict_attribute())
+        except (InvalidNameFormat, InvalidPassword, InvalidUsername, UserNameAlreadyExist) as err:
             print(err)
-            
-        
