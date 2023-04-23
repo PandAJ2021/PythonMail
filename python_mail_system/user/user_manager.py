@@ -10,18 +10,19 @@ user_db_connector = PostgreSQLDatabase(
 
 users_db = DatabaseHandler('users', user_db_connector)
 
-# users_db.create_table({
-#     'id': 'bigserial primary key Not Null',
-#     'name': 'varchar(50)',
-#     'username': 'varchar(50)',
-#     'salt': 'text Not Null',
-#     'password': 'text Not null'
-# })
+users_db.create_table({
+    'id': 'bigserial primary key Not Null',
+    'name': 'varchar(50)',
+    'username': 'varchar(50)',
+    'salt': 'text Not Null',
+    'password': 'text Not null',
+    'logging' : 'boolean default false'
+})
 
-# hashed_entered_password = hashlib.sha256(entered_password.encode())
 
 
 class UserManager:
+
 
     @staticmethod
     def auth_username(username):
@@ -48,3 +49,15 @@ class UserManager:
             users_db.insert(user.dict_attribute())
         except (InvalidNameFormat, InvalidPassword, InvalidUsername, UserNameAlreadyExist) as err:
             print(err)
+
+    @staticmethod
+    def logging_user(username:str, password:str):
+        try:
+            if not UserManager.auth_username(username) and UserManager.auth_pass(username, password):
+                raise AuthenticationError
+            users_db.update({'logging':True}, f"username = '{username}'")
+        except (InvalidPassword, InvalidUsername , AuthenticationError) as err:
+            print(err)
+        
+
+    
