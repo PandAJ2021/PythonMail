@@ -12,6 +12,15 @@ class User:
         self.username = username
         self.salt = secrets.token_hex(15)
         self.password = password
+    
+    def return_dict(self):
+
+        return { 
+            "name": f"'{self.full_name}'",
+            "username": f"'{self.username}'",
+            "salt": f"'{self.salt}'",
+            "password": f"'{self.password}'"
+            }
 
     @property
     def full_name(self):
@@ -48,3 +57,4 @@ class User:
         self._password = hashed
 
 
+test= User('Ali Jalili', 'Li23582_d', '12345aaL')
