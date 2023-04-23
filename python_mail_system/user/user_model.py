@@ -48,8 +48,3 @@ class User:
         self._password = hashed
 
 
-class UserManager(User):
-    pass
-
-test= User('Ali Jalili', 'Li23582_d', '12345aaL')
-print(test.__dict__)
