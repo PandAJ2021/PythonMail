@@ -16,20 +16,17 @@ users_db.create_table({
     'username': 'varchar(50)',
     'salt': 'text Not Null',
     'password': 'text Not null',
-    'logging' : 'boolean default false'
+    'logging': 'boolean default false'
 })
 
 
-
 class UserManager:
-
 
     @staticmethod
     def auth_username(username):
         # stored users is a list of one member tuples.
         stored_users = users_db.read('username', f"username = '{username}'")
         return username in [t[0] for t in stored_users]
-        
 
     @staticmethod
     def auth_pass(username, password):
@@ -38,7 +35,6 @@ class UserManager:
         entered_pass = password + salt
         hashed_entered = hashlib.md5(entered_pass.encode()).hexdigest()
         return hashed_entered == stored_pass
-
 
     @staticmethod
     def register_user(full_name: str, username: str, password: str):
@@ -51,13 +47,18 @@ class UserManager:
             print(err)
 
     @staticmethod
-    def logging_user(username:str, password:str):
+    def logging_user(username: str, password: str):
         try:
             if not UserManager.auth_username(username) and UserManager.auth_pass(username, password):
                 raise AuthenticationError
-            users_db.update({'logging':True}, f"username = '{username}'")
-        except (InvalidPassword, InvalidUsername , AuthenticationError) as err:
+            users_db.update({'logging': True}, f"username = '{username}'")
+            user_row = users_db.read(
+                'id, name , username', f"username = '{username}'")[0]
+            user = User(user_row[1],user_row[2],"FakePass1",user_row[0] )
+            #becuse I dont need passwd and can't use hash pass here
+            return user
+        except (InvalidPassword, InvalidUsername, AuthenticationError) as err:
             print(err)
-        
 
-    
+    # @staticmethod
+    # def logout():
