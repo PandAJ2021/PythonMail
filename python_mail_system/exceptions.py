@@ -19,3 +19,7 @@ class InvalidPassword(AuthException):
     def __init__(self):
         super().__init__('Password must be at least 8 characters long and contain at least one'+ 
                     ' uppercase letter and one\n digit.')
+
+class UserAlreadyExist(AuthException):
+    def __init__(self):
+        super().__init__('User already exist!')
