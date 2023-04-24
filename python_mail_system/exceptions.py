@@ -17,13 +17,24 @@ class InvalidUsername(AuthException):
 
 class InvalidPassword(AuthException):
     def __init__(self):
-        super().__init__('Password must be at least 8 characters long and contain at least one'+ 
-                    ' uppercase letter and one digit!')
+        super().__init__('Password must be at least 8 characters long and contain at least one' +
+                         ' uppercase letter and one digit!')
+
 
 class UserNameAlreadyExist(AuthException):
     def __init__(self):
-        super().__init__('Username already exist!')
+        super().__init__('Sorry, that username is already taken. Please choose a different username.!')
+
 
 class AuthenticationError(AuthException):
     def __init__(self):
-        super().__init__('Username or Password is not correct!')
+        super().__init__('The username or password you entered is incorrect. Please try again!')
+
+
+class UserNotFound(AuthException):
+    def __init__(self):
+        super().__init__('Sorry, we could not find a user with that username!')
+
+class EmptyFieldError(AuthException):
+    def __init__(self):
+        super().__init__('This field cannot be empty!')
