@@ -30,7 +30,7 @@ folders_db.create_table({
     'folder_id': 'BIGSERIAL PRIMARY KEY',
     'folder_name': 'VARCHAR(50) NOT NULL',
     'user_id': 'INTEGER NOT NULL REFERENCES users(id)',
-    'time_stamp': 'TIMESTAMP DEFAULT NOW()',
+    'time_stamp': 'TIMESTAMP DEFAULT NOW()'
 })
 
 def get_folders_db():
