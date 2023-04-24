@@ -51,4 +51,16 @@ class DatabaseHandler:
         self.database.execute(query)
         self.database.close()
 
+    def join_all(self, columns ="*" ,  condition=None):
+        query = f"SELECT {columns} FROM users"
+        query += "JOIN user_folder ON users.id = user_folder.user_id\
+                  JOIN folders ON user_folder.folder_id = folders.folder_id\
+                  JOIN emailes ON folders.folder_id = emailes.folder_id"
+        if condition:
+            query += f' WHERE {condition}'
+        query += ';'
+
+        self.database.connect()
+        return self.database.execute(query)
+
         
