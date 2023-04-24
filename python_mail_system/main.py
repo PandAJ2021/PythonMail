@@ -14,3 +14,6 @@ from user.user_manager import UserManager
 a = UserManager.logging_user('MJ25757j-i', 'Mj12345678')
 
 print(a.id)
+
+# a = UserManager.get_id('MJ25757j-i')
+# print(a)
