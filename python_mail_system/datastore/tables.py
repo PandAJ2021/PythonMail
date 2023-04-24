@@ -39,14 +39,14 @@ def get_folders_db():
 
 # emailes table
 
-emailes_db = DatabaseHandler('emails', db_connector)
+emailes_db = DatabaseHandler('emailes', db_connector)
 
 emailes_db.create_table({
     'email_id': 'BIGSERIAL PRIMARY KEY',
     'subject': 'VARCHAR(200) NOT NULL',
     'body': 'TEXT NOT NULL',
     'sender_id': 'INTEGER NOT NULL REFERENCES users(id)',
-    'ecipient_id': 'INTEGER NOT NULL REFERENCES users(id)',
+    'recipient_id': 'INTEGER NOT NULL REFERENCES users(id)',
     'folder_id': 'INTEGER NOT NULL REFERENCES folders(folder_id)',
     'time_stamp': 'TIMESTAMP DEFAULT NOW()',
     'status': "VARCHAR(20) NOT NULL DEFAULT 'unread' "
