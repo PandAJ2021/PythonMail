@@ -20,10 +20,21 @@ class DatabaseHandler:
         values = ','.join(data.values())
         query = f"INSERT INTO {self.table_name}" + \
             f"({columns})" + f'\n VALUES({values});'
-
         self.database.connect()
-        self.database.execute(query)
+        cur = self.database.conn.cursor()
+        cur.execute(query, tuple(data.values()))
+        cur.execute("SELECT lastval();")
+        inserted_id = cur.fetchone()[0]
+        cur.close()
         self.database.close()
+
+        return inserted_id
+        # self.database.connect()
+        # cur = self.database.conn.cursor()
+        # cur.execute(query)
+        # inserted_id = [row[0] for row in cur.fetchall()]
+        # self.database.close()
+        # return inserted_id
 
     def read(self, columns ="*" ,  condition=None):
         query = f"SELECT {columns} FROM {self.table_name}"
@@ -52,10 +63,10 @@ class DatabaseHandler:
         self.database.close()
 
     def join_all(self, columns ="*" ,  condition=None):
-        query = f"SELECT {columns} FROM users"
-        query += "JOIN user_folder ON users.id = user_folder.user_id\
-                  JOIN folders ON user_folder.folder_id = folders.folder_id\
-                  JOIN emailes ON folders.folder_id = emailes.folder_id"
+        query = f"SELECT {columns} FROM users "
+        query += "JOIN user_folder ON users.id = user_folder.user_id "
+        query += "JOIN folders ON user_folder.folder_id = folders.folder_id "
+        query += "JOIN emailes ON folders.folder_id = emailes.folder_id "
         if condition:
             query += f' WHERE {condition}'
         query += ';'
