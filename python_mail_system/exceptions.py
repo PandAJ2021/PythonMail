@@ -35,9 +35,11 @@ class UserNotFound(AuthException):
     def __init__(self):
         super().__init__('Sorry, we could not find a user with that username!')
 
+
 class EmptyFieldError(AuthException):
     def __init__(self):
         super().__init__('This field cannot be empty!')
+
 
 class InvalidFolderName(AuthException):
     def __init__(self):
