@@ -38,3 +38,7 @@ class UserNotFound(AuthException):
 class EmptyFieldError(AuthException):
     def __init__(self):
         super().__init__('This field cannot be empty!')
+
+class InvalidFolderName(AuthException):
+    def __init__(self):
+        super().__init__('Invalid folder name: must be "inbox", "draft", or "sent"!')
