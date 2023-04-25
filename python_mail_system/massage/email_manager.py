@@ -1,7 +1,6 @@
 from massage.email_model import Email
 from datastore.tables import get_emailes_db
 from exceptions import *
-from folder import FolderManager  
 
 
 class EmailManager:
@@ -10,17 +9,30 @@ class EmailManager:
     emailes_db = get_emailes_db()
 
     @classmethod
-    def make_massage(cls, subject, body, send_id, recip_id, folder_name):
+    def make_massage(cls, subject, body, send_id, recip_id): #send_id comes from logging
         try:
-            folder_id = FolderManager.make_folder(folder_name, send_id)
             email_instance = cls.email(
-                subject, body, send_id, recip_id, f'{folder_id}')
-            cls.emailes_db.insert(email_instance.dict_attributes())
+                subject, body, send_id, recip_id )
+            return cls.emailes_db.insert(email_instance.dict_attributes()) #massage_d
         except EmptyFieldError as err:
             print(err)
 
     @classmethod
-    def show_inbox(cls, user_id, folder_name):
-        inbox = cls.emailes_db.join_all('subject, body, sender_id',
-                                f"id = '{user_id}' and folder_name = '{folder_name}'")
+    def show_inbox(cls, user_id , subject=None):
+        condition = f"recipient_id = '{user_id}'"
+        if subject:
+            condition += f"and subject = '{subject}'"
+        inbox = cls.emailes_db.join_all('subject,email_time , body, sender_id ',condition)
         return inbox
+
+    @classmethod
+    def show_sentbox(cls, user_id , subject=None):
+        condition = f"sender_id = '{user_id}'"
+        if subject:
+            condition += f"and subject = '{subject}'"
+        inbox = cls.emailes_db.join_all('subject,email_time , body, recipient_id ',condition)
+        return inbox
+   
+    @classmethod
+    def send_massage(cls , massage_id ,username):
+        pass
