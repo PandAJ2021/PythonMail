@@ -4,12 +4,11 @@ from datetime import datetime
 class Email:
 
     def __init__(self, subject: str, body: str, send_id=None,
-                recip_id=None, folder_id=None, status=None, email_id=None):
+                recip_id=None, status=None, email_id=None):
 
         self.email_id = email_id
         self.send_id = send_id
         self.recip_id = recip_id
-        self.folder_id = folder_id
         self.subject = subject
         self.body = body
         self.time_stamp = datetime.now()
@@ -21,8 +20,6 @@ class Email:
             'body': f"'{self.body}'",
             'sender_id': f'{self.send_id}',
             'recipient_id': f'{self.recip_id}',
-            'folder_id': f'{self.folder_id}',
-
         }
 
     @property
