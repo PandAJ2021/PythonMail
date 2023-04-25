@@ -22,7 +22,7 @@ class DatabaseHandler:
             f"({columns})" + f'\n VALUES({values});'
         self.database.connect()
         cur = self.database.conn.cursor()
-        cur.execute(query, tuple(data.values()))
+        cur.execute(query)
         cur.execute("SELECT lastval();")
         inserted_id = cur.fetchone()[0]
         cur.close()
@@ -64,9 +64,7 @@ class DatabaseHandler:
 
     def join_all(self, columns ="*" ,  condition=None):
         query = f"SELECT {columns} FROM users "
-        query += "JOIN user_folder ON users.id = user_folder.user_id "
-        query += "JOIN folders ON user_folder.folder_id = folders.folder_id "
-        query += "JOIN emailes ON folders.folder_id = emailes.folder_id "
+        query += "JOIN emailes ON users.user_id = emailes.sender_id "
         if condition:
             query += f' WHERE {condition}'
         query += ';'
