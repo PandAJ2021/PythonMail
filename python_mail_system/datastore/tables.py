@@ -11,7 +11,7 @@ db_connector = PostgreSQLDatabase(
 users_db = DatabaseHandler('users', db_connector)
 
 users_db.create_table({
-    'id': 'bigserial primary key',
+    'user_id': 'bigserial primary key',
     'name': 'VARCHAR(50)',
     'username': 'VARCHAR(50)',
     'salt': 'TEXT NOT NULL',
@@ -22,21 +22,6 @@ users_db.create_table({
 def get_users_db():
     return users_db
 
-# folders table
-
-folders_db = DatabaseHandler('folders', db_connector)
-
-folders_db.create_table({
-    'folder_id': 'BIGSERIAL PRIMARY KEY',
-    'folder_name': 'VARCHAR(50) NOT NULL',
-    'user_id': 'INTEGER NOT NULL REFERENCES users(id)',
-    'time_stamp': 'TIMESTAMP DEFAULT NOW()'
-})
-
-def get_folders_db():
-    return folders_db
-
-
 # emailes table
 
 emailes_db = DatabaseHandler('emailes', db_connector)
@@ -45,23 +30,12 @@ emailes_db.create_table({
     'email_id': 'BIGSERIAL PRIMARY KEY',
     'subject': 'VARCHAR(200) NOT NULL',
     'body': 'TEXT NOT NULL',
-    'sender_id': 'INTEGER NOT NULL REFERENCES users(id)',
-    'recipient_id': 'INTEGER NOT NULL REFERENCES users(id)',
-    'folder_id': 'INTEGER NOT NULL REFERENCES folders(folder_id)',
-    'time_stamp': 'TIMESTAMP DEFAULT NOW()',
-    'status': "VARCHAR(20) NOT NULL DEFAULT 'unread' "
+    'sender_id': 'INTEGER NOT NULL REFERENCES users(user_id)',
+    'recipient_id': 'INTEGER NOT NULL REFERENCES users(user_id)',
+    'email_time': 'TIMESTAMP DEFAULT NOW()',
+    'read_status': "VARCHAR(20) NOT NULL DEFAULT 'unread' ",
+    'sent_status' : "VARCHAR(20) NOT NULL DEFAULT 'draft' "
 })
 
 def get_emailes_db():
     return emailes_db
-
-
-# user_folder table
-
-user_folder = DatabaseHandler('user_folder', db_connector)
-
-user_folder.create_table({
-    'user_id': 'INTEGER NOT NULL REFERENCES users(id)',
-    'folder_id': 'INTEGER NOT NULL REFERENCES folders(folder_id)',
-    'PRIMARY KEY': '(user_id, folder_id)',
-})
