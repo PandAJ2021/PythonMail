@@ -28,8 +28,15 @@ class UserManager:
     def get_id(cls, username):
         if not UserManager.auth_username(username):
             raise UserNotFound
-        user_id = cls.users_db.read('id', f"username = '{username}'")[0][0]
+        user_id = cls.users_db.read('user_id', f"username = '{username}'")[0][0]
         return user_id
+
+    @classmethod
+    def get_username_from_id(cls , id):
+            username = cls.users_db.read('username', f"user_id = '{id}'")[0][0]
+            if not username:
+                raise UserNotFound
+        
 
     @classmethod
     def register_user(cls, full_name: str, username: str, password: str):
@@ -47,14 +54,10 @@ class UserManager:
             if not cls.auth_username(username) and cls.auth_pass(username, password):
                 raise AuthenticationError
             cls.users_db.update({'logging': True}, f"username = '{username}'")
-            # user_row = cls.users_db.read(
-            #     'id, name , username', f"username = '{username}'")[0]
-            # my_user = cls.user(
-            #     user_row[1], user_row[2], "FakePass1", user_row[0])
-            # becuse I dont need passwd and can't use hash pass here
             return cls.get_id(username)
         except AuthenticationError as err:
             print(err)
+            
     @classmethod
     def logout(cls, username):
         cls.users_db.update({'logging': False}, f"username = '{username}'")
