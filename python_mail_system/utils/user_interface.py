@@ -46,8 +46,16 @@ class Menu:
             option.function()
 
 
-m1 = Menu_item('m1', children=[Menu_item('m11', children=[Menu_item('m111', function=lambda: print(2))], condition=True),
-                               Menu_item('m12', function=lambda: print(2) ,condition=False)], condition=True)
+routers = Menu_item('Login or Register',condition =True ,  children = [
+    Menu_item('Sign up' ,condition= True , ),
+    Menu_item('Sign in' , condition= True , children=[
+        Menu_item('User Panel' , condition= True , children=[
+            Menu_item('Send massage'),
+            Menu_item('Sent box'),
+            Menu_item('inbox'),
+            Menu_item('Draft'),
+        ]) , 
+        Menu_item('Logout')]),])
 
 
-Menu.run_menu(m1)
+Menu.run_menu(routers)
