@@ -1,5 +1,5 @@
 from os import system as terminal, name as os_name
-
+import time
 
 def clear():
     terminal("cls" if os_name.lower() == "nt" else "clear")
@@ -44,18 +44,7 @@ class Menu:
                 exit()
         else:
             option.function()
+            input('\n<<Press ENTER to continue>>')
+            Menu.run_menu(option.parent)
+        
 
-
-routers = Menu_item('Login or Register',condition =True ,  children = [
-    Menu_item('Sign up' ,condition= True , ),
-    Menu_item('Sign in' , condition= True , children=[
-        Menu_item('User Panel' , condition= True , children=[
-            Menu_item('Send massage'),
-            Menu_item('Sent box'),
-            Menu_item('inbox'),
-            Menu_item('Draft'),
-        ]) , 
-        Menu_item('Logout')]),])
-
-
-Menu.run_menu(routers)
