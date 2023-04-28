@@ -18,23 +18,19 @@ class DatabaseHandler:
     def insert(self, data: dict):
         columns = ','.join(data.keys())
         values = ','.join(data.values())
+        #converter = lambda x : f"'{x}'" if isinstance(x ,str) else str(x)
+        #values = ','.join(map( converter, data.values()))
         query = f"INSERT INTO {self.table_name}" + \
             f"({columns})" + f'\n VALUES({values});'
         self.database.connect()
         cur = self.database.conn.cursor()
         cur.execute(query)
-        cur.execute("SELECT lastval();")
-        inserted_id = cur.fetchone()[0]
+        cur.execute("SELECT lastval();") # set this to give the last id.
+        inserted_id = cur.fetchone()[0] 
         cur.close()
         self.database.close()
 
         return inserted_id
-        # self.database.connect()
-        # cur = self.database.conn.cursor()
-        # cur.execute(query)
-        # inserted_id = [row[0] for row in cur.fetchall()]
-        # self.database.close()
-        # return inserted_id
 
     def read(self, columns ="*" ,  condition=None):
         query = f"SELECT {columns} FROM {self.table_name}"
@@ -44,6 +40,7 @@ class DatabaseHandler:
 
         self.database.connect()
         return self.database.execute(query)
+        # self.cur.close() # i dont check that still
 
     def update(self, data: dict, condition: str):
 
@@ -71,5 +68,3 @@ class DatabaseHandler:
 
         self.database.connect()
         return self.database.execute(query)
-
-        
