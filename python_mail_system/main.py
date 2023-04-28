@@ -2,31 +2,41 @@ from datastore.database_manager import DatabaseHandler
 from utils.database_connector import PostgreSQLDatabase
 from user.user_manager import UserManager
 from massage.email_manager import EmailManager
+from utils.user_interface import Menu , Menu_item
 
-# from datetime import datetime
-# datetime().
-# UserManager.register_user('mohammad jalili', 'MJ25757j-i', 'Mj12345678')
-# UserManager.register_user('ali jalili', 'AJ25757j-i', 'AJ12345678')
-# a = UserManager.authentication('mohammad jalili', 'Mj235757j-i', 'Mj12345678')
-# print(a)
+    
+def register():
+    name = input('Enter your full name : ')
+    username = input('Enter your username: ')
+    passwd = input('Enter your password: ')
+    UserManager.register_user(name , username , passwd)
+    # print("You sign up successfully")
 
-# a= UserManager.auth_pass('MJ25757j-i', 'Mj2345678')
-# print(a)
-# a = UserManager.logging_user('MJ25757j-i', 'Mj12345678')
+def log_in():
+    username = input('Enter your username: ')
+    passwd = input('Enter your password: ')   
+    global user_id
+    user_id = UserManager.logging_user(username, passwd)
 
-# print(a)
+def inbox():
+    a= EmailManager.show_inbox(user_id)   
+    print(a)
 
-# a = UserManager.get_id('MJ25757j-i')
-# print(a)
+user_id = 1
 
-# EmailManager.make_massage('friendship', 'hello', '2','1' )
-# a =EmailManager.make_massage('friendship', 'hi whats up', '1','2' )
+routers = Menu_item('Login or Register',condition =True ,  children = [
+    Menu_item('Sign up' ,condition= True , function=register),
+    Menu_item('Sign in' , condition= True,function=log_in) ,
+    Menu_item('User Panel' , condition= UserManager.user_status, children=[
+        Menu_item('Send massage'),
+        Menu_item('Sent box'),
+        Menu_item('inbox' , function= inbox ),
+        Menu_item('Draft'),
+        ]) , 
+    Menu_item('Logout')])
 
-# print(a)
-# a= EmailManager.show_inbox('2')
-# for i in a :
-#     print(a[0][1].ctime())
-# print(a)
-b= EmailManager.show_sentbox('1')
-print(b)
 
+Menu.run_menu(routers)
+# print(user_id)
+
+# log_in()
