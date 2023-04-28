@@ -21,7 +21,8 @@ class User:
             "salt": f"'{self.salt}'",
             "password": f"'{self.password}'"
             }
-
+    # def logging_status(self):
+    #     return self.login
     @property
     def full_name(self):
         return self._full_name
@@ -55,6 +56,4 @@ class User:
         passwd = value + self.salt
         hashed = hashlib.md5(passwd.encode()).hexdigest()
         self._password = hashed
-
-
 
