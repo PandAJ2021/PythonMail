@@ -1,30 +1,53 @@
-import tkinter as tk
+from os import system as terminal, name as os_name
 
-class MyTkinterApp:
-    def __init__(self, master):
-        self.master = master
 
-    def create_button(self, text, command=None ):
-        button = tk.Button(self.master, text=text, command=command)
-        button.pack()
-        return button
+def clear():
+    terminal("cls" if os_name.lower() == "nt" else "clear")
 
-    def create_entry(self):
-        entry = tk.Entry(self.master)
-        entry.pack()
-        return entry
-        
-    def create_label(self, text):
-        label = tk.Label(self.master, text=text)
-        label.pack()
-        return label
 
-root = tk.Tk()
-my_app = MyTkinterApp(root)
+class Menu_item:
 
-# create a button and an entry using the class methods
-my_app.create_button("Click me!")
-my_app.create_entry()
+    def __init__(self, name, function=lambda: True, children=None, condition=None):
+        self.name = name
+        self.parent = None
+        self.children = children
+        self.condition = condition
+        self.function = function
+        self.set_parent()
 
-root.mainloop()
+    def set_parent(self):
+        if children := self.children:
+            for child in children:
+                child.parent = self
 
+
+class Menu:
+
+    @staticmethod
+    def run_menu(option=Menu_item):
+        if option.children and option.condition:
+            children = [child for child in option.children]
+            clear()
+            print(f"======== {option.name} ========")
+            for child in children:
+                print(f'\n{children.index(child)+1}) {child.name}')
+            print(
+                f'\n0) ' + ('Exit' if not option.parent else f'Back to {option.parent.name}'))
+
+            index = int(input('\nchoose a number: '))
+            if index:  # if index is not 0 run the child
+                Menu.run_menu(children[index - 1])
+
+            elif option.parent:  # if index is 0 run parent
+                Menu.run_menu(option.parent)
+            else:
+                exit()
+        else:
+            option.function()
+
+
+m1 = Menu_item('m1', children=[Menu_item('m11', children=[Menu_item('m111', function=lambda: print(2))], condition=True),
+                               Menu_item('m12', function=lambda: print(2) ,condition=False)], condition=True)
+
+
+Menu.run_menu(m1)
