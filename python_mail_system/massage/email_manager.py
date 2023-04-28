@@ -22,7 +22,7 @@ class EmailManager:
         condition = f"recipient_id = '{user_id}'"
         if subject:
             condition += f"and subject = '{subject}'"
-        inbox = cls.emailes_db.join_all('subject,email_time , body, sender_id ',condition)
+        inbox = cls.emailes_db.join_all('subject, sender_id, body, read_status, email_time',condition)
         return inbox
 
     @classmethod
@@ -35,4 +35,4 @@ class EmailManager:
    
     @classmethod
     def send_massage(cls , massage_id ,username):
-        pass
+        cls.users_db.update({'sent_status': 'sent'}, f"username = '{username}'")
