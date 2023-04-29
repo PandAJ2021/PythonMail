@@ -32,6 +32,7 @@ class UserManager:
 
     @classmethod
     def get_id(cls, username):
+        user_id = None
         try:
             if not UserManager.auth_username(username):
                 raise UserNotFound
@@ -62,7 +63,7 @@ class UserManager:
     @classmethod
     def logging_user(cls, username: str, password: str):
         try:
-            if not any((cls.auth_username(username), cls.auth_pass(username, password))):
+            if not (cls.auth_username(username) and cls.auth_pass(username, password)):
                 raise AuthenticationError
             cls.users_db.update({'logging': True}, f"username = '{username}'")
             cls.user_status = True
