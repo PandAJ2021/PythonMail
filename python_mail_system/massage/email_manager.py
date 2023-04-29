@@ -22,7 +22,7 @@ class EmailManager:
         condition = f"recipient_id = '{user_id}'"
         if subject:
             condition += f"and subject = '{subject}'"
-        inbox = cls.emailes_db.join_all('subject, sender_id, body, read_status, email_time',condition)
+        inbox = cls.emailes_db.join_all('sender_id , subject, body ,email_time, read_status',condition)
         return inbox
 
     @classmethod
@@ -30,9 +30,18 @@ class EmailManager:
         condition = f"sender_id = '{user_id}'"
         if subject:
             condition += f"and subject = '{subject}'"
-        inbox = cls.emailes_db.join_all('subject,email_time , body, recipient_id ',condition)
+        inbox = cls.emailes_db.join_all('recipient_id , subject, body ,email_time',condition)
         return inbox
    
     @classmethod
-    def send_massage(cls , massage_id ,username):
-        cls.users_db.update({'sent_status': 'sent'}, f"username = '{username}'")
+    def send_massage(cls , email_id):
+        cls.emailes_db.update({'sent_status': "'sent'"}, f"email_id = '{email_id}'")
+
+
+    @classmethod
+    def show_draft(cls , user_id , subject=None):
+        condition = f"sender_id = '{user_id}' and sent_status = 'sent' "
+        if subject:
+            condition += f"and subject = '{subject}'"
+        inbox = cls.emailes_db.join_all('recipient_id , subject, body ,email_time',condition)
+        return inbox
