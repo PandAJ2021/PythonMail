@@ -1,4 +1,5 @@
 from os import system as terminal, name as os_name
+from exceptions import InvalidIndexError
 import time
 
 def clear():
@@ -33,8 +34,19 @@ class Menu:
                 print(f'\n{children.index(child)+1}) {child.name}')
             print(
                 f'\n0) ' + ('Exit' if not option.parent else f'Back to {option.parent.name}'))
+            #index validation
+            index = None
+            while index is None:
+                try:
+                    index = int(input('\nchoose a number: '))
+                    if not 0 <= index <= len(children):
+                        raise InvalidIndexError
+                except ValueError:
+                    print('Invalid input. Please enter a number.')
+                except InvalidIndexError as err:
+                    print(err)
+                    index = None
 
-            index = int(input('\nchoose a number: '))
             if index:  # if index is not 0 run the child
                 Menu.run_menu(children[index - 1])
 
