@@ -8,10 +8,10 @@ class UserManager:
 
     users_db = get_users_db()
     user = User
-    user_status = None
+    user_status = False
     
     @classmethod
-    def get_uaer_status(cls):
+    def get_user_status(cls):
         return cls.user_status
 
     @classmethod
@@ -32,10 +32,13 @@ class UserManager:
 
     @classmethod
     def get_id(cls, username):
-        if not UserManager.auth_username(username):
-            raise UserNotFound
-        user_id = cls.users_db.read(
-            'user_id', f"username = '{username}'")[0][0]
+        try:
+            if not UserManager.auth_username(username):
+                raise UserNotFound
+            user_id = cls.users_db.read(
+                'user_id', f"username = '{username}'")[0][0]
+        except UserNotFound as err:
+            print(err)
         return user_id
 
     @classmethod
@@ -43,8 +46,8 @@ class UserManager:
         username = cls.users_db.read('username', f"user_id = '{id}'")[0][0]
         if not username:
             raise UserNotFound
+        return username    
 
-# i must change register and logging methodes
     @classmethod
     def register_user(cls, full_name: str, username: str, password: str):
         try:
@@ -52,22 +55,22 @@ class UserManager:
             if cls.auth_username(username):
                 raise UserNameAlreadyExist
             cls.users_db.insert(my_user.dict_attribute())
-            print('Registered successfully')
+            print('\nRegistered successfully')
         except (InvalidNameFormat, InvalidPassword, InvalidUsername, UserNameAlreadyExist) as err:
             print(err)
 
     @classmethod
     def logging_user(cls, username: str, password: str):
         try:
-            if any((cls.auth_username(username), cls.auth_pass(username, password))):
+            if not any((cls.auth_username(username), cls.auth_pass(username, password))):
                 raise AuthenticationError
             cls.users_db.update({'logging': True}, f"username = '{username}'")
             cls.user_status = True
-            print('Logged in successfully')
+            print('\nLogged in successfully')
             return cls.get_id(username)
         except (AuthenticationError, IndexError):
-            print('The username or password you entered is incorrect. Please try again!')
+            print('\nThe username or password you entered is incorrect. Please try again!')
 
     @classmethod
-    def logout(cls, username):
-        cls.users_db.update({'logging': False}, f"username = '{username}'")
+    def logout(cls, user_id):
+        cls.users_db.update({'logging': False}, f"'user_id' = '{user_id}'")
