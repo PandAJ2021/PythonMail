@@ -45,7 +45,7 @@ class DatabaseHandler:
     def update(self, data: dict, condition: str):
 
         query = f'UPDATE {self.table_name} SET '
-        query += ', '.join([f"{col}={data[col]}" for col in data])
+        query += ', '.join([f"{col} = {data[col]}" for col in data])
         query += f' WHERE {condition} ;'
 
         self.database.connect()
