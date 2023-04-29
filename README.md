@@ -1,4 +1,3 @@
-# PythonMail
 # Messenger
 
 Messenger is a Python application that allows users to send and receive messages between each other. Users can log in with their username and password, send messages to other users, and view their inbox, draft, and sent folders. The application uses a database to store user information and their messages.
