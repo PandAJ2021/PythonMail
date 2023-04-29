@@ -39,3 +39,7 @@ class UserNotFound(AuthException):
 class EmptyFieldError(AuthException):
     def __init__(self):
         super().__init__('\nThis field cannot be empty!')
+
+class InvalidIndexError(AuthException):
+    def __init__(self):
+        super().__init__('\nInvalid input. Please enter correctly!')
