@@ -34,6 +34,7 @@ class Menu:
                 print(f'\n{children.index(child)+1}) {child.name}')
             print(
                 f'\n0) ' + ('Exit' if not option.parent else f'Back to {option.parent.name}'))
+                
             #index validation
             index = None
             while index is None:
