@@ -7,7 +7,7 @@ def clear():
 
 class Menu_item:
 
-    def __init__(self, name, function=lambda: True, children=None, condition=None):
+    def __init__(self, name, function=lambda: True, children=None, condition=lambda: True):
         self.name = name
         self.parent = None
         self.children = children
@@ -25,7 +25,7 @@ class Menu:
 
     @staticmethod
     def run_menu(option=Menu_item):
-        if option.children and option.condition:
+        if option.children and option.condition():
             children = [child for child in option.children]
             clear()
             print(f"======== {option.name} ========")
