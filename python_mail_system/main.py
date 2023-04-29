@@ -5,7 +5,7 @@ from massage.email_manager import EmailManager
 from utils.user_interface import Menu , Menu_item
 from datetime import datetime
 
-class Manage:
+class ManageProgram:
 
     user = UserManager
     email = EmailManager
@@ -76,15 +76,15 @@ class Manage:
 
 
 routers = Menu_item('Login or Register', children = [
-    Menu_item('Sign up' ,function= Manage.register),
-    Menu_item('Sign in' ,function= Manage.log_in) ,
+    Menu_item('Sign up' ,function= ManageProgram.register),
+    Menu_item('Sign in' ,function= ManageProgram.log_in) ,
     Menu_item('User Panel' , condition= UserManager.get_user_status, children=[
-        Menu_item('Send massage', function= Manage.send_msg),
-        Menu_item('Sent box', function= Manage.sentbox),
-        Menu_item('inbox' , function= Manage.inbox ),
-        Menu_item('Draft', function= Manage.draft),
+        Menu_item('Send massage', function= ManageProgram.send_msg),
+        Menu_item('Sent box', function= ManageProgram.sentbox),
+        Menu_item('inbox' , function= ManageProgram.inbox ),
+        Menu_item('Draft', function= ManageProgram.draft),
         ]) , 
-    Menu_item('Logout',condition= UserManager.get_user_status , function= Manage.log_out)])
+    Menu_item('Logout',condition= UserManager.get_user_status , function= ManageProgram.log_out)])
 
 
 Menu.run_menu(routers)
