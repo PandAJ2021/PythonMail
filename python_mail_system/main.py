@@ -38,13 +38,14 @@ class ManageProgram:
         body = input("Enter your massage: ")
         receiver_usrname = input("Enter receiver username: ")
         recip_id = cls.user.get_id(receiver_usrname)
-        massage_id = cls.email.make_massage(subject, body, cls.user_id, recip_id)
-        ask = input('Do you want to send massage? (Y/n)')
-        if ask[0] in 'Nn':
-            print('massage saved in draft.')
-        else :
-            cls.email.send_massage(massage_id)
-            print('massage sent successfully.')
+        if recip_id:
+            massage_id = cls.email.make_massage(subject, body, cls.user_id, recip_id)
+            ask = input('Do you want to send massage? (Y/n)')
+            if ask[0] in 'Nn':
+                print('massage saved in draft.')
+            else :
+                cls.email.send_massage(massage_id)
+                print('massage sent successfully.')
         
     @classmethod
     def inbox(cls):
